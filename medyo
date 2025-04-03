@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boat Ticketing System</title>
+  <style>
+    /* General Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+    }
+    
+    .space-y-4 > * + * {
+      margin-top: 1rem;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    /* Form Elements */
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn:hover {
+      background-color: #2563eb;
+    }
+    
+    .btn:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+    }
+    
+    .btn-outline {
+      background-color: white;
+      color: #3b82f6;
+      border: 1px solid #3b82f6;
+    }
+    
+    .btn-outline:hover {
+      background-color: #eff6ff;
+    }
+    
+    .btn-active {
+      background-color: #2563eb;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #4b5563;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      font-size: 1rem;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    
+    .form-input[readonly] {
+      background-color: #f3f4f6;
+    }
+    
+    .mt-4 {
+      margin-top: 1rem;
+    }
+    
+    .w-full {
+      width: 100%;
+    }
+    
+    /* Alert Component */
+    .alert {
+      padding: 1rem;
+      border-radius: 0.25rem;
+      background-color: #f3f4f6;
+      border-left: 4px solid #3b82f6;
+      margin-bottom: 1rem;
+    }
+    
+    .alert-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .alert-description {
+      color: #4b5563;
+      line-height: 1.5;
+    }
+    
+    /* Hide all pages initially */
+    .page {
+      display: none;
+    }
+    
+    /* Only show the active page */
+    .page.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="app">
+    <!-- Home Page -->
+    <div class="page active" id="home-page">
+      <div class="card-header">
+        <h2 class="card-title">Boat Ticketing System</h2>
+      </div>
+      <div class="card-content text-center">
+        <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Welcome to Boat Travels</h1>
+        <button class="btn" id="book-now-btn">Book Now</button>
+      </div>
+    </div>
+    
+    <!-- Login Page -->
+    <div class="page" id="login-page">
+      <div class="card-header">
+        <h2 class="card-title">Login</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="username" class="form-input" placeholder="Enter username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-input" placeholder="Enter password">
+          </div>
+          <button class="btn" id="login-btn">Login</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Instructions Page -->
+    <div class="page" id="instructions-page">
+      <div class="card-header">
+        <h2 class="card-title">Booking Instructions</h2>
+      </div>
+      <div class="card-content">
+        <div class="alert">
+          <div class="alert-title">Important Information</div>
+          <div class="alert-description">
+            Welcome to our Boat Ticketing System. Please follow these steps:
+            <br>1. Select your destination
+            <br>2. Choose departure details
+            <br>3. Enter passenger information
+            <br>4. Select payment method
+            <br>5. Confirm and receive receipt
+          </div>
+        </div>
+        <button class="btn mt-4" id="proceed-btn">Proceed</button>
+      </div>
+    </div>
+    
+    <!-- Destination Page -->
+    <div class="page" id="destination-page">
+      <div class="card-header">
+        <h2 class="card-title">Select Destination</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <button class="btn btn-outline" data-name="Marabut Samar" data-price="200">Marabut Samar - ₱200</button>
+          <button class="btn btn-outline" data-name="Basey Samar" data-price="100">Basey Samar - ₱100</button>
+          <button class="btn btn-outline" data-name="San Antonio" data-price="50">San Antonio - ₱50</button>
+          <button class="btn mt-4" id="destination-next-btn" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Departure Page -->
+    <div class="page" id="departure-page">
+      <div class="card-header">
+        <h2 class="card-title">Departure Details</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <div class="form-group">
+            <label class="form-label">Destination</label>
+            <input type="text" id="selected-destination" class="form-input" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" id="departure-date" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input type="time" id="departure-time" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price</label>
+            <input type="text" id="price-display" class="form-input" readonly>
+          </div>
+          <button class="btn" id="departure-next-btn" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Passenger Details Page -->
+    <div class="page" id="passengers-page">
+      <div class="card-header">
+        <h2 class="card-title">Passenger Details</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="first-name" class="form-input" placeholder="Enter first name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Middle Initial</label>
+            <input type="text" id="middle-initial" class="form-input" placeholder="Enter middle initial" maxlength="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="last-name" class="form-input" placeholder="Enter last name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Passengers</label>
+            <input type="number" id="passenger-count" class="form-input" value="1" min="1" max="10">
+          </div>
+          <button class="btn" id="passenger-next-btn" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Payment Page -->
+    <div class="page" id="payment-page">
+      <div class="card-header">
+        <h2 class="card-title">Payment Method</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <div class="form-group">
+            <label class="form-label">Select Payment Method</label>
+            <select id="payment-method" class="form-input">
+              <option value="">Select Payment Method</option>
+              <option value="GCash">GCash</option>
+              <option value="PayPal">PayPal</option>
+              <option value="Palawan Pay">Palawan Pay</option>
+              <option value="Tala">Tala</option>
+            </select>
+          </div>
+          <button class="btn" id="payment-next-btn" disabled>Proceed to Receipt</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Receipt Page -->
+    <div class="page" id="receipt-page">
+      <div class="card-header">
+        <h2 class="card-title">Booking Receipt</h2>
+      </div>
+      <div class="card-content">
+        <div class="space-y-4">
+          <div>
+            <strong>Username:</strong> <span id="receipt-username"></span>
+          </div>
+          <div>
+            <strong>Destination:</strong> <span id="receipt-destination"></span>
+          </div>
+          <div>
+            <strong>Destination Price:</strong> <span id="receipt-price"></span>
+          </div>
+          <div>
+            <strong>Departure Date:</strong> <span id="receipt-date"></span>
+          </div>
+          <div>
+            <strong>Departure Time:</strong> <span id="receipt-time"></span>
+          </div>
+          <div>
+            <strong>Passenger Name:</strong> <span id="receipt-name"></span>
+          </div>
+          <div>
+            <strong>Number of Passengers:</strong> <span id="receipt-passenger-count"></span>
+          </div>
+          <div>
+            <strong>Payment Method:</strong> <span id="receipt-payment"></span>
+          </div>
+          <div>
+            <strong>Total Price:</strong> <span id="receipt-total"></span>
+          </div>
+          <button class="btn mt-4" id="restart-btn">Book Another Ticket</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App State
+    const appState = {
+      currentPage: 'home',
+      loginData: { username: '', password: '' },
+      destination: null,
+      departureDetails: { date: '', time: '' },
+      passengerDetails: {
+        firstName: '',
+        middleInitial: '',
+        lastName: '',
+        passengers: 1
+      },
+      paymentMethod: ''
+    };
+
+    // Navigation function
+    function navigateTo(page) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      
+      // Show the selected page
+      document.getElementById(`${page}-page`).classList.add('active');
+      
+      // Update current page in state
+      appState.currentPage = page;
+    }
+
+    // Home Page
+    document.getElementById('book-now-btn').addEventListener('click', () => {
+      navigateTo('login');
+    });
+
+    // Login Page
+    document.getElementById('login-btn').addEventListener('click', () => {
+      appState.loginData.username = document.getElementById('username').value;
+      appState.loginData.password = document.getElementById('password').value;
+      
+      // Simple validation
+      if (appState.loginData.username && appState.loginData.password) {
+        navigateTo('instructions');
+      } else {
+        alert('Please enter both username and password');
+      }
+    });
+
+    // Instructions Page
+    document.getElementById('proceed-btn').addEventListener('click', () => {
+      navigateTo('destination');
+    });
+
+    // Destination Page
+    const destinationButtons = document.querySelectorAll('#destination-page .btn-outline');
+    const destinationNextBtn = document.getElementById('destination-next-btn');
+    
+    destinationButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all destination buttons
+        destinationButtons.forEach(btn => btn.classList.remove('btn-active'));
+        
+        // Add active class to the clicked button
+        button.classList.add('btn-active');
+        
+        // Update app state
+        appState.destination = {
+          name: button.getAttribute('data-name'),
+          price: parseInt(button.getAttribute('data-price'))
+        };
+        
+        // Enable next button
+        destinationNextBtn.disabled = false;
+      });
+    });
+    
+    destinationNextBtn.addEventListener('click', () => {
+      // Update display values on departure page
+      document.getElementById('selected-destination').value = appState.destination.name;
+      document.getElementById('price-display').value = `₱${appState.destination.price} per person`;
+      
+      navigateTo('departure');
+    });
+
+    // Departure Page
+    const departureDate = document.getElementById('departure-date');
+    const departureTime = document.getElementById('departure-time');
+    const departureNextBtn = document.getElementById('departure-next-btn');
+    
+    function checkDepartureForm() {
+      departureNextBtn.disabled = !(departureDate.value && departureTime.value);
+    }
+    
+    departureDate.addEventListener('change', () => {
+      appState.departureDetails.date = departureDate.value;
+      checkDepartureForm();
+    });
+    
+    departureTime.addEventListener('change', () => {
+      appState.departureDetails.time = departureTime.value;
+      checkDepartureForm();
+    });
+    
+    departureNextBtn.addEventListener('click', () => {
+      navigateTo('passengers');
+    });
+
+    // Passenger Details Page
+    const firstName = document.getElementById('first-name');
+    const middleInitial = document.getElementById('middle-initial');
+    const lastName = document.getElementById('last-name');
+    const passengerCount = document.getElementById('passenger-count');
+    const passengerNextBtn = document.getElementById('passenger-next-btn');
+    
+    function checkPassengerForm() {
+      passengerNextBtn.disabled = !(firstName.value && lastName.value && passengerCount.value >= 1);
+    }
+    
+    firstName.addEventListener('input', () => {
+      appState.passengerDetails.firstName = firstName.value;
+      checkPassengerForm();
+    });
+    
+    middleInitial.addEventListener('input', () => {
+      appState.passengerDetails.middleInitial = middleInitial.value;
+    });
+    
+    lastName.addEventListener('input', () => {
+      appState.passengerDetails.lastName = lastName.value;
+      checkPassengerForm();
+    });
+    
+    passengerCount.addEventListener('input', () => {
+      appState.passengerDetails.passengers = parseInt(passengerCount.value);
+      checkPassengerForm();
+    });
+    
+    passengerNextBtn.addEventListener('click', () => {
+      navigateTo('payment');
+    });
+
+    // Payment Page
+    const paymentMethod = document.getElementById('payment-method');
+    const paymentNextBtn = document.getElementById('payment-next-btn');
+    
+    paymentMethod.addEventListener('change', () => {
+      appState.paymentMethod = paymentMethod.value;
+      paymentNextBtn.disabled = !paymentMethod.value;
+    });
+    
+    paymentNextBtn.addEventListener('click', () => {
+      // Calculate total price
+      const totalPrice = appState.passengerDetails.passengers * appState.destination.price;
+      
+      // Update receipt page with all information
+      document.getElementById('receipt-username').textContent = appState.loginData.username;
+      document.getElementById('receipt-destination').textContent = appState.destination.name;
+      document.getElementById('receipt-price').textContent = `₱${appState.destination.price} per person`;
+      document.getElementById('receipt-date').textContent = appState.departureDetails.date;
+      document.getElementById('receipt-time').textContent = appState.departureDetails.time;
+      document.getElementById('receipt-name').textContent = `${appState.passengerDetails.firstName} ${appState.passengerDetails.middleInitial ? appState.passengerDetails.middleInitial + '.' : ''} ${appState.passengerDetails.lastName}`;
+      document.getElementById('receipt-passenger-count').textContent = appState.passengerDetails.passengers;
+      document.getElementById('receipt-payment').textContent = appState.paymentMethod;
+      document.getElementById('receipt-total').textContent = `₱${totalPrice}`;
+      
+      navigateTo('receipt');
+    });
+
+    // Receipt Page
+    document.getElementById('restart-btn').addEventListener('click', () => {
+      // Reset form fields
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      
+      destinationButtons.forEach(btn => btn.classList.remove('btn-active'));
+      
+      document.getElementById('departure-date').value = '';
+      document.getElementById('departure-time').value = '';
+      
+      document.getElementById('first-name').value = '';
+      document.getElementById('middle-initial').value = '';
+      document.getElementById('last-name').value = '';
+      document.getElementById('passenger-count').value = '1';
+      
+      document.getElementById('payment-method').value = '';
+      
+      // Reset state
+      appState.loginData = { username: '', password: '' };
+      appState.destination = null;
+      appState.departureDetails = { date: '', time: '' };
+      appState.passengerDetails = {
+        firstName: '',
+        middleInitial: '',
+        lastName: '',
+        passengers: 1
+      };
+      appState.paymentMethod = '';
+      
+      // Go back to home
+      navigateTo('home');
+    });
+  </script>
+</body>
+</html>
