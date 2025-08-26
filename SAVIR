@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int n, i;
+    int maleCount = 0, femaleCount = 0;
+    char name[100], sex;
+
+    printf("Enter number of participants: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("\nEnter name of participant %d: ", i + 1);
+        scanf("%s", name);
+
+        printf("Enter sex (M/F): ");
+        scanf(" %c", &sex);
+
+        if (sex == 'M' || sex == 'm') {
+            maleCount++;
+        } else if (sex == 'F' || sex == 'f') {
+            femaleCount++;
+        } else {
+            printf("Invalid input for sex. Skipping...\n");
+        }
+    }
+
+    printf("\nTotal participants: %d\n", n);
+    printf("Male participants: %d\n", maleCount);
+    printf("Female participants: %d\n", femaleCount);
+
+    if (n > 500) {
+        printf("✅ The seminar can be held.\n");
+    } else {
+        printf("❌ The seminar cannot be held. (Need more than 500 participants)\n");
+    }
+
+    return 0;
+}
